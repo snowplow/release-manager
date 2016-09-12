@@ -1,0 +1,19 @@
+language: python
+python:
+  - '2.7'
+  - '3.3'
+install:
+  - python setup.py install
+script:
+  - python setup.py test
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./.travis/deploy.py
+  on:
+    tags: true
+    python: '2.7'
+env:
+  global:
+  - secure: h3HxF2nMYwslpC82ANMverWzA6Q7oeA6cvfEB/vfPNcbXSy+1QsjlrXJhd7qX9HsqTAcYCmH0ZgmeXveG2+u57+QzyfQraOgdjYleCLWizDl30XGvXwOLa4LJ4If5klG1pLfGrMukbPqMdT35LrV7noPPBWxSBXDRcSbsUnqSeY9fJ+ufpJeTXrY53kWGy3dhipr1Ne/0OYJ8KY1AnPe7GXecIKUh3lv6vvOiAOfWC3C5qVqs6YH9aI3ri8w5V+xlRU8I+0z52LTn+mqJ+pG2pmk2GhUQEq/7yyU3fL/2VMyeGHSoJ+m+/MNPHvOwI7ckyhbo1z58glXAJs9epPUdEKvTtrlRKg/oDkitdtOrXQs3Kb3FnWfFZIzhxQ4IdMMOty2mCaa/kbilrAbwCab1z8FfMmBrlRA/K0/EIMPLn6zv2X9OotPfsm7gDtl9nrb2A1kw+PVBo042cRm3OafjIBCV3c9SGDHwp8wA3qmfCT8jiZlmiUFbJwafSpKs0dDbSV81TzoHYGPJdRL1vZq3wIoV+yFP+gDQi1rt9vB/Odh9kEEBf2sCoesRf8gySQHkPzU2p2wMN2L/tIkflIjUsfrCOux2D3DsG8iMFtpGcFTtJBZyPDLf8XaNcxS0C+kl4HvfnjjVXtIRuDak+LOXqx9Gtqmtnm3aR9twuKkMRM=
+  - secure: VYfUHFCgjnKR+wObxwlSCj6J2W/JfNiGfG9IoyG31jzNxqoc8Hw3G8+1qmi0CwxAFDSB23mzMwgiwYm2d/qoWuqeCTpxb1q3GSjwBdTvSBEQO2ur3fxA2SzKdmyTcBaBvfaXDlTlqM+EHATLlWh4cGwL1Gge9EIARPUbDUn3axZyhFLeYNnU3h19sqLJtORcmVUuWzZ/HsgieTEGvEtk7b96wPjiHfWfuWubzSwGZ334pBl6vrZDewW34mlbemuX4W25v3EEVDRiqsGB6v2SusvO/kT14BKEO80hL/AIJvkTQk1I0Kxa2OkXZt0pfC6P40odGN1DRh659oFQPaysjAifU5mYSQ5Pw0ufm1DQJXuiDDiF+EwzkfSSTdaeNFaKOYIidVMDGPUT3vRg1SbGYLXuJPkHdKI/Aj6lsCHRqlZw8ZGNYRNJlOQtg7H3RptG6daDdIGngJhDrHfLg9km2So/0J6wB3jtaUuB/XuLdGAWBnp7AQufR23V5JHhCrKQHQDfkrlhAEmHrvycQMBOhAom46MUhP3o+AUkBY/dKWq9dwGE4uCbDIZprpo3V/48vuGhBY2Xt9ISLIXNWuJGBRsjtWGZK2waCq+GX9VmVgvRwmPCKmJ/8hpLNM1TMp0maCoibqddvFH9f9uckVa9SpA83BzaWtmYM4WsYZkygxI=
