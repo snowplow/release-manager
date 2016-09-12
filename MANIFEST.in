@@ -1,0 +1,4 @@
+include README.rst
+include CHANGES.txt
+include LICENSE-2.0.txt
+include requirements.txt

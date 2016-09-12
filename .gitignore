@@ -1,0 +1,17 @@
+# macOS
+.DS_store
+
+# Python
+build/
+*.egg-info/
+.pypirc
+*.pyc
+*.egg
+*.egg/
+
+# release-manager
+deploy/
+*.yml.tmp
+
+# Vagrant
+.vagrant/

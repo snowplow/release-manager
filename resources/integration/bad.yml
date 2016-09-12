@@ -1,0 +1,26 @@
+---
+local:
+  root_dir : <%= ENV['TRAVIS_BUILD_DIR'] %>
+
+targets:
+  - type     : "bintray"
+    user     : <%= ENV['BINTRAY_USER'] %>
+    password : <%= ENV['BINTRAY_PASSWORD'] %>
+
+packages:
+  - repo     : "generic"
+    name     : "release-manager"
+    user_org : "jbeemster"
+    publish  : true
+    override : false
+    continue_on_conflict : false
+    version  : <%= CMD['cat VERSION'] %>
+    build_version : <%= ENV['TRAVIS_TAG'] %>
+    build_commands:
+      - ls -ls
+    artifacts:
+      - prefix : "release_manager_"
+        suffix : ""
+        type   : "zip"
+        binary_paths:
+          - this-doesnt-exist.yaml

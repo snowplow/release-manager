@@ -1,0 +1,35 @@
+---
+# Required: local settings
+local:
+  root_dir : <%= ENV['TRAVIS_BUILD_DIR'] %>
+
+# Required: deployment targets
+targets:
+  - type     : "bintray" # Options: bintray
+    user     : <%= ENV['BINTRAY_USER'] %>
+    password : <%= ENV['BINTRAY_PASSWORD'] %>
+
+# Required: packages to be deployed
+packages:
+  - repo     : "generic"
+    name     : "release-manager"
+    user_org : "jbeemster"
+    publish  : true
+    override : false
+    continue_on_conflict : false
+    version  : <%= CMD['cat VERSION'] %>
+    
+    # Required IF '--check-version' is passed: will assert that both versions are the same
+    build_version : <%= ENV['TRAVIS_TAG'] %>
+    
+    # Optional: Build commands
+    build_commands:
+      - ls -ls
+
+    # Required: Artifact
+    artifacts:
+      - prefix : "release_manager_"
+        suffix : ""
+        type   : "zip"
+        binary_paths:
+          - setup.py

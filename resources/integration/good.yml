@@ -1,0 +1,32 @@
+---
+vars:
+  some_var : "release_manager"
+  version  : "VERSION"
+
+local:
+  root_dir : <%= ENV['TRAVIS_BUILD_DIR'] %>
+
+targets:
+  - type     : "bintray"
+    user     : <%= ENV['BINTRAY_USER'] %>
+    password : <%= ENV['BINTRAY_PASSWORD'] %>
+
+packages:
+  - repo     : "generic"
+    name     : "release-manager"
+    user_org : "jbeemster"
+    publish  : true
+    override : false
+    continue_on_conflict : false
+    version  : <%= CMD['cat {{ vars.version }}'] %>
+    build_version : <%= ENV['TRAVIS_TAG'] %>
+    build_commands:
+      - cd <%= ENV['TRAVIS_BUILD_DIR'] %>/dist && ls -ls
+      - cd resources && ls -ls
+      - cd {{ vars.some_var }} && ls -ls
+    artifacts:
+      - prefix : "release_manager_"
+        suffix : ""
+        type   : "zip"
+        binary_paths:
+          - setup.py

@@ -1,0 +1,7 @@
+To get started:
+vagrant ssh
+cd /vagrant
+sudo pip install pip --upgrade
+sudo apt-get install python-dev
+sudo python setup.py install
+python setup.py test
