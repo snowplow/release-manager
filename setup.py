@@ -52,7 +52,8 @@ setup(
     install_requires=[
         "requests[security]==2.11.1",
         "pyyaml==3.12",
-        "jinja2==2.8"
+        "jinja2==2.8",
+        "boto3==1.4.1"
     ],
     tests_require=[
         "nose"

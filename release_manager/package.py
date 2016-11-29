@@ -20,9 +20,12 @@
 """
 
 
+from __future__ import print_function
+import os
+import os.path
+
 import release_manager.logger as logger
 import release_manager.utils as utils
-import os
 
 
 # --- Constants
@@ -30,18 +33,17 @@ import os
 
 ARTIFACT_STAGING_DIR = "dist"
 
+AVAILABLE_ARTIFACT_TYPES = ['zip', 'asis']
+
 
 # --- Functions
 
 
-def create_artifact(root_dir, version, package, artifact_type, artifact_prefix, artifact_suffix, binary_paths):
+def create_zip_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths):
     """Builds the artifact for upload"""
     logger.log_start("Creating artifact for package %s" % package)
 
-    if artifact_type != "zip":
-        raise ValueError("Invalid type specified; expected one of [zip] and got %s" % artifact_type)
-
-    artifact_root = "%s%s%s" % (artifact_prefix, version, artifact_suffix)
+    artifact_root = "%s%s%s" % (artifact_prefix, version, artifact_suffix,)
     artifact_name = "%s.zip" % artifact_root
     artifact_name = artifact_name.replace("-", "_")
 
@@ -65,6 +67,34 @@ def create_artifact(root_dir, version, package, artifact_type, artifact_prefix, 
         'artifact_name': artifact_name,
         'artifact_path': "%s/%s" % (artifact_folder, artifact_name)
     }
+
+
+def create_asis_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths):
+    """Construct artifact name and perform no operations"""
+    logger.log_start("Creating artifact for package %s" % package)
+
+    if len(binary_paths) != 1 and type(binary_paths) != str:
+        raise ValueError("Invalid binary_paths for 'asis' artifact type. It must contain single item. %s items instead" % len(binary_paths))
+
+    artifact_name = "%s%s%s" % (artifact_prefix, version, artifact_suffix,)
+    return {
+        'artifact_name': artifact_name,
+        'artifact_path': os.path.join(root_dir, binary_paths[0])
+    }
+
+
+def create_artifact(root_dir, version, package, artifact_type, artifact_prefix, artifact_suffix, binary_paths):
+    """Builds the artifact for upload"""
+    logger.log_start("Creating artifact for package %s" % package)
+
+    if artifact_type == 'zip':
+        result = create_zip_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths)
+    elif artifact_type == 'asis':
+        result = create_asis_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths)
+    else:
+        raise ValueError("Invalid type specified; expected one of %s and got %s" % (AVAILABLE_ARTIFACT_TYPES, artifact_type,))
+
+    return result
 
 
 def check_version(version, build_version):

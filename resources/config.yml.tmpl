@@ -11,6 +11,7 @@ targets:
 
 # Required: packages to be deployed
 packages:
+  # Bintray example
   - repo     : "generic"
     name     : "release-manager"
     user_org : "jbeemster"
@@ -33,3 +34,27 @@ packages:
         type   : "zip"
         binary_paths:
           - setup.py
+
+  # AWS S3 plain upload example (works with "awss3" target)
+  - bucket   : "global-static-assets"
+    path     : "releases/js"
+    region   : "us-east-1"
+    publish  : true
+    override : false
+    continue_on_conflict : false
+    version  : <%= CMD['cat VERSION'] %>
+
+    # Required IF '--check-version' is passed: will assert that both versions are the same
+    build_version : <%= ENV['TRAVIS_TAG'] %>
+
+    # Optional: Build commands
+    build_commands:
+      - grunt build
+
+    # Required: Artifact
+    artifacts:
+      - type   : "asis"
+        prefix : "asset-"
+        suffix : ".js"
+        binary_paths:
+          - dist/asset.js
