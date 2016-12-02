@@ -1,5 +1,5 @@
 """
-    version.py
+    test_package.py
 
     Copyright (c) 2016 Snowplow Analytics Ltd. All rights reserved.
 
@@ -20,5 +20,23 @@
 """
 
 
-__version_info__ = ("0", "2", "0")
-__version__ = ".".join(str(x) for x in __version_info__)
+import unittest
+from release_manager.package import create_artifact
+
+
+class PackageTest(unittest.TestCase):
+
+    def test_correct_asis_artifact(self):
+        result = create_artifact('.', '0.4.0-M1', "package name doesn't matter", 'asis', 'test-package-', '.jar', ['path/to/binary.jar'])
+        self.assertEqual(result, {
+            'artifact_name': 'test-package-0.4.0-M1.jar',
+            'artifact_path': './path/to/binary.jar'
+        })
+
+    def test_correct_zip_artifact(self):
+        result = create_artifact('.', '0.4.0', "kinesis-sink", 'zip', 'test-package-', '', ['setup.py'])
+        self.assertEqual(result, {
+            'artifact_name': 'test_package_0.4.0.zip',
+            'artifact_path': './dist/kinesis-sink/test_package_0.4.0.zip'
+        })
+

@@ -42,7 +42,7 @@ setup(
     author="Joshua Beemster",
     author_email="support@snowplowanalytics.com",
     url="https://github.com/snowplow/release-manager",
-    download_url="https://github.com/snowplow/release-manager/tarball/0.1.0",
+    download_url="https://github.com/snowplow/release-manager/tarball/%s" % __version__,
     license="http://www.apache.org/licenses/LICENSE-2.0",
     packages=[
         "release_manager",
@@ -52,7 +52,8 @@ setup(
     install_requires=[
         "requests[security]==2.11.1",
         "pyyaml==3.12",
-        "jinja2==2.8"
+        "jinja2==2.8",
+        "boto3==1.4.1"
     ],
     tests_require=[
         "nose"

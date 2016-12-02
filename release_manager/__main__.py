@@ -19,13 +19,15 @@
     License: Apache License Version 2.0
 """
 
+import argparse
 
 import release_manager.targets.bintray as bintray
+import release_manager.targets.awss3 as s3
+
 import release_manager._version as _version
 import release_manager.logger as logger
 import release_manager.utils as utils
 import release_manager.package as pack
-import argparse
 
 
 # --- Main
@@ -35,7 +37,7 @@ def main():
     """Main function entry point"""
     parser = argparse.ArgumentParser(description="Utility for creating and uploading zip packages.")
     parser.add_argument("--config", help="the path to the configuration yaml file")
-    parser.add_argument("--make-version", action='store_true', default=False, help="makes a new version for the package")
+    parser.add_argument("--make-version", action='store_true', default=False, help="makes a new version for the package (bintray-specific)")
     parser.add_argument("--make-artifact", action='store_true', default=False, help="makes the artifacts that will be uploaded")
     parser.add_argument("--upload-artifact", action='store_true', default=False, help="uploads the artifacts to the targets")
     parser.add_argument("--check-version", action='store_true', default=False, help="checks that the version specified matches the build")
@@ -66,11 +68,13 @@ def main():
             pack.check_version(package["version"], package["build_version"])
 
         # Push to targets
-        for target in config["targets"]:
-            if target["type"] == "bintray":
-                bintray.deploy_to_bintray(args, config["local"], package, target)
+        for target in config['targets']:
+            if target['type'] == 'bintray':
+                bintray.deploy_to_bintray(args, config['local'], package, target)
+            elif target['type'] == 'awss3':
+                s3.upload_to_s3(args, config['local'], package, target)
             else:
-                raise ValueError("Invalid target specified; expected one of [bintray] and got %s" % target["type"])
+                raise ValueError("Invalid target specified; expected one of [bintray, awss3] and got %s" % target["type"])
 
         logger.log_footer("Finished processing package %s!" % package["name"])
 

@@ -19,17 +19,33 @@
     License: Apache License Version 2.0
 """
 
+import contextlib
+import os
+import subprocess
+import random
+import string
+import threading
+import re
+import time
 
 from jinja2 import Template
-import release_manager.logger as logger
-import sys
-import subprocess
-import re
 import yaml
-import os
+
+import release_manager.logger as logger
 
 
 # --- Command Execution
+
+@contextlib.contextmanager
+def working_directory(path):
+    """A context manager which changes the working directory to the given
+    path, and then changes it back to its previous value on exit.
+
+    """
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
 
 
 def output_everything(output):
@@ -68,8 +84,45 @@ def execute(command, callback=output_everything, quiet=False, shell=False):
         return output
 
 
-# --- Config
+class AwakeThread(threading.Thread):
+    """Thread printing messages to console, keeping Travis CI from shut down prematurely"""
+    def run(self):
+        print("Starting AwakeThread")
+        count = 0
+        while count < 10:
+            message = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(128))
+            print("Tick %s. %s seconds passed. Random output: %s" % (str(count), str(40 * count), message))
+            time.sleep(40)
+            count = count + 1
+        print("Exit AwakeThread")
 
+
+def sbt_version(directory):
+    """Return version of project in some directory"""
+    t = AwakeThread()
+    t.setDaemon(True)
+    t.start()
+
+    with working_directory(directory):
+        sbt_output = execute(['sbt', 'version', '-Dsbt.log.noformat=true'], None)
+        print(sbt_output.stderr.read())
+        for line in sbt_output.stdout.read().split("\n"):
+            print(line)
+            match = re.search('\[info\]\s*(\d+\.\d+\.\d+.*)$', line)
+            if match:
+                return match.group(1)
+        raise ValueError("Not SBT Project: " + directory)
+
+    t.join()
+    print("Some result should appear")
+
+
+
+PREDEFINED_FUNCTIONS = {
+    'sbt_version': sbt_version
+}
+
+# --- Config
 
 def parse_config(config_path):
     """Checks if secrets need to be fetched from the environment"""
@@ -95,6 +148,10 @@ def parse_config(config_path):
     pattern_cmd = re.compile(r'^(.*)\<%= CMD\[\'(.*)\'\] %\>(.*)$')
     yaml.add_implicit_resolver("!pathcmd", pattern_cmd)
 
+    # Add function resolver
+    pattern_fun = re.compile(r'^(.*)\<%= FUNC\[\'(.*)\((.*)\)\'\] %\>(.*)$')
+    yaml.add_implicit_resolver("!func", pattern_fun)
+
     def pathex_constructor(loader, node):
         """Processes environment variables found in the YAML"""
         value = loader.construct_scalar(node)
@@ -108,8 +165,16 @@ def parse_config(config_path):
         retval = output_value(execute(cmd_var, None, True, True), True)
         return before_path + retval.decode("utf-8") + remaining_path
 
+    def fun_constructor(loader, node):
+        """Processes embedded functions found in the YAML"""
+        value = loader.construct_scalar(node)
+        before_path, fun, arg, remaining_path = pattern_fun.match(value).groups()
+        retval = PREDEFINED_FUNCTIONS[fun](arg)
+        return before_path + retval.decode("utf-8") + remaining_path
+
     yaml.add_constructor("!pathex", pathex_constructor)
     yaml.add_constructor("!pathcmd", pathcmd_constructor)
+    yaml.add_constructor("!func", fun_constructor)
 
     with open(temp_path, 'r') as stream:
         try:

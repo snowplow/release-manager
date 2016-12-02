@@ -4,13 +4,13 @@ Overview
 --------
 
 The release-manager is a Python utility for easily uploading zipped
-binaries to a destination target. It allows you to:
+or plain binaries to a destination target. It allows you to:
 
 -  Create new package versions
 -  Upload artifacts to said version
 -  Currently only support zip
 -  Upload to multiple targets
--  Currently only supports Bintray
+-  Currently supports Bintray and AWS S3
 -  Combine N binaries into the artifact that is then uploaded
 -  Upload N artifacts to for the package
 
@@ -92,6 +92,20 @@ This works like so:
     some_var_value: "hello_world"
     some_ref_var_value: {{ some_var_value }}
 
+Function resolver
+^^^^^^^^^^^^^^^^^
+
+release-manager provides you one (for now) predefined function - 
+`sbt_version(path)`. Using it you can extract version of SBT project in 
+specified `path`.
+
+This works like so:
+
+::
+
+    some_cmd_value: <%= FUNC['sbt_version(../scalaz)'] %>
+
+
 Example config
 ^^^^^^^^^^^^^^
 
@@ -144,6 +158,36 @@ Example config
             # The binaries to put in the zip
             binary_paths:
               - setup.py
+
+AWS S3 target
+^^^^^^^^^^^^^
+
+In addition to Bintray you can also upload your files to Amazon S3. 
+
+::
+
+    targets:
+      - type     : "awss3" # Options: bintray
+        user     : <%= ENV['AWS_ACCESS_KEY'] %>
+        password : <%= ENV['AWS_SECRET_KEY'] %>
+
+As is artifacts
+^^^^^^^^^^^^^^^
+
+In addition to zip artifacts you can also upload plain files from your local FS.
+
+::
+
+        artifacts:
+          - prefix : "release_manager_"
+            suffix : ""
+            type   : "asis"
+
+            binary_paths:
+              - setup.py
+
+File `setup.py` will be renamed to `release_manager_{{ version}}` and upload 
+into specified path.
 
 Copyright and license
 ---------------------

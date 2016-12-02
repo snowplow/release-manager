@@ -21,10 +21,12 @@
 
 
 from __future__ import division
+
+import json
+import requests
+
 import release_manager.logger as logger
 import release_manager.package as pack
-import requests
-import json
 
 
 def create_bintray_version(version, package, repo, user_org, user, api_key):
