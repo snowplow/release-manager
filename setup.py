@@ -42,7 +42,7 @@ setup(
     author="Joshua Beemster",
     author_email="support@snowplowanalytics.com",
     url="https://github.com/snowplow/release-manager",
-    download_url="https://github.com/snowplow/release-manager/tarball/0.1.0",
+    download_url="https://github.com/snowplow/release-manager/tarball/%s" % __version__,
     license="http://www.apache.org/licenses/LICENSE-2.0",
     packages=[
         "release_manager",
