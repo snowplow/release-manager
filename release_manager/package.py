@@ -41,7 +41,6 @@ AVAILABLE_ARTIFACT_TYPES = ['zip', 'asis']
 
 def create_zip_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths):
     """Builds the artifact for upload"""
-    logger.log_start("Creating artifact for package %s" % package)
 
     artifact_root = "%s%s%s" % (artifact_prefix, version, artifact_suffix,)
     artifact_name = "%s.zip" % artifact_root
@@ -71,7 +70,6 @@ def create_zip_artifact(root_dir, version, package, artifact_prefix, artifact_su
 
 def create_asis_artifact(root_dir, version, package, artifact_prefix, artifact_suffix, binary_paths):
     """Construct artifact name and perform no operations"""
-    logger.log_start("Creating artifact for package %s" % package)
 
     if len(binary_paths) != 1 and type(binary_paths) != str:
         raise ValueError("Invalid binary_paths for 'asis' artifact type. It must contain single item. %s items instead" % len(binary_paths))
