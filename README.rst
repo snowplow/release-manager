@@ -159,6 +159,29 @@ Example config
             binary_paths:
               - setup.py
 
+
+Multiple locations
+^^^^^^^^^^^^^^^^^^
+Same artifact can be uploaded into two or more buckets, without unnecessary boilerplate if you use `locations` keyword instead of first-level `buckets`, `path` and `region`.
+
+::
+
+    packages:
+      - name     : "acme-app-multiple-locations"
+        locations:
+        - bucket   : "acme-hosted-assets-us-east-1"
+          path     : "software/acme-app"
+          region   : "us-east-1"
+        - bucket   : "acme-hosted-assets-us-west-1"
+          path     : "software/acme-app"
+          region   : "us-west-1"
+        publish  : true
+        override : false
+        continue_on_conflict : false
+        version  : "0.1.0"
+
+Note that if you're using `locations` array - first-level `bucket`, `path` and `region` must be absent.
+
 AWS S3 target
 ^^^^^^^^^^^^^
 
