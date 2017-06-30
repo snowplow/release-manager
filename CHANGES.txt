@@ -1,8 +1,14 @@
+Version 0.3.0 (2017-06-30)
+--------------------------
+Fix "creating artifact" message logged twice (#23)
+Add support for multiple targets (#25)
+Switch deploy to legacy PyPI server (#27)
+
 Version 0.2.0 (2016-12-02)
 --------------------------
-* Added support for Amazon S3 target (#7)
-* Added function `sbt_version` (#18)
-* Inject current version in download_url (#22)
+Added support for Amazon S3 target (#7)
+Added function `sbt_version` (#18)
+Inject current version in download_url (#22)
 
 Version 0.1.0 (2016-09-22)
 --------------------------
