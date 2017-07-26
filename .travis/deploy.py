@@ -11,7 +11,7 @@ import sys
 
 
 HOME = expanduser("~")
-DEFAULT_SERVER = 'https://pypi.python.org/pypi'
+DEFAULT_SERVER = 'https://upload.pypi.org/legacy/'
 DEFAULT_REPO = 'pypi'
 PYPIRC_FILE = '%s/.pypirc' % HOME
 
@@ -58,9 +58,9 @@ def write_config():
         '  %s\n' % DEFAULT_REPO,
         '\n',
         '[%s]\n' % DEFAULT_REPO,
-        'repository=%s\n' % DEFAULT_SERVER,
-        'username=%s\n' % PYPI_USERNAME,
-        'password=%s\n' % PYPI_PASSWORD
+        'repository:%s\n' % DEFAULT_SERVER,
+        'username:%s\n' % PYPI_USERNAME,
+        'password:%s\n' % PYPI_PASSWORD
     ]
 
     with open(PYPIRC_FILE, 'w') as outfile:
