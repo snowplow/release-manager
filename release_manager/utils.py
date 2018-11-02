@@ -104,7 +104,7 @@ def sbt_version(directory):
     t.start()
 
     with working_directory(directory):
-        sbt_output = execute(['sbt', 'version', '-Dsbt.log.noformat=true'], None)
+        sbt_output = execute(['sbt', '-no-colors', 'version'], None)
         print(sbt_output.stderr.read())
         for line in sbt_output.stdout.read().split("\n"):
             print(line)
