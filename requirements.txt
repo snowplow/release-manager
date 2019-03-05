@@ -1,4 +1,4 @@
-requests[security]==2.11.1
+requests[security]==2.21.0
 pyyaml==3.12
 jinja2==2.8
 boto3==1.4.1
