@@ -1,7 +1,7 @@
 """
     version.py
 
-    Copyright (c) 2016-2017 Snowplow Analytics Ltd. All rights reserved.
+    Copyright (c) 2016-2019 Snowplow Analytics Ltd. All rights reserved.
 
     This program is licensed to you under the Apache License Version 2.0,
     and you may not use this file except in compliance with the Apache License
@@ -20,5 +20,5 @@
 """
 
 
-__version_info__ = ("0", "3", "0",)
+__version_info__ = ("0", "3", "1",)
 __version__ = ".".join(str(x) for x in __version_info__)

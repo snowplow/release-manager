@@ -1,3 +1,12 @@
+Version 0.3.1 (2019-03-05)
+--------------------------
+Bump requests to 2.21.0 (#32)
+Update sbt version detection (#33)
+Bump PyYAML to 5.1b3 (#35)
+Bump jinja2 to 2.10 (#37)
+Bump boto3 to 1.9.107 (#38)
+Bump Python 3 to 3.6 in CI (#39)
+
 Version 0.3.0 (2017-07-26)
 --------------------------
 Fix "creating artifact" message logged twice (#23)
