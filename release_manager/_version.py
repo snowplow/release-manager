@@ -20,5 +20,5 @@
 """
 
 
-__version_info__ = ("0", "3", "1",)
+__version_info__ = ("0", "3", "1", "rc1",)
 __version__ = ".".join(str(x) for x in __version_info__)
