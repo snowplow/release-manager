@@ -24,6 +24,7 @@ import unittest
 import release_manager._version as _version
 import release_manager.utils as utils
 import os
+import sys
 
 
 # --- Helpers
@@ -101,7 +102,12 @@ class IntegrationTest(unittest.TestCase):
         )
 
         self.assertEquals(retval['code'], 0)
-        self.assertEquals(retval['stderr'], "%s\n" % _version.__version__)
+
+        # argparse --version prints to stderr before Python 3.4, stdout afterwards
+        if sys.version_info >= (3, 4):
+            self.assertEquals(retval['stdout'], "%s\n" % _version.__version__)
+        else:
+            self.assertEquals(retval['stderr'], "%s\n" % _version.__version__)
 
 
     def test_integration_check_version(self):
