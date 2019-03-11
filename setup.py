@@ -15,7 +15,7 @@
     language governing permissions and limitations there under.
 
     Authors: Joshua Beemster
-    Copyright: Copyright (c) 2016 Snowplow Analytics Ltd
+    Copyright: Copyright (c) 2016-2019 Snowplow Analytics Ltd
     License: Apache License Version 2.0
 """
 
@@ -50,10 +50,11 @@ setup(
         "release_manager.test"
     ],
     install_requires=[
-        "requests[security]==2.11.1",
-        "pyyaml==3.12",
-        "jinja2==2.8",
-        "boto3==1.4.1"
+        "requests[security]==2.21.0",
+        "pyyaml==5.1b3",
+        "jinja2==2.10",
+        "boto3==1.9.91",
+        "botocore==1.12.91"
     ],
     tests_require=[
         "nose"
