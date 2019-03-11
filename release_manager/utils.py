@@ -30,6 +30,7 @@ import time
 
 from jinja2 import Template
 import yaml
+from yaml.loader import SafeLoader
 
 import release_manager.logger as logger
 
@@ -132,7 +133,7 @@ def parse_config(config_path):
     # Template yaml file
     with open(config_path, 'r') as stream:
         try:
-            temp = template_yaml(yaml.load(stream))
+            temp = template_yaml(yaml.safe_load(stream))
         except yaml.YAMLError as exc:
             raise ValueError("Invalid config passed to the program: %s" % exc)
 
@@ -142,15 +143,15 @@ def parse_config(config_path):
 
     # Add environment resolver
     pattern_env = re.compile(r'^(.*)\<%= ENV\[\'(.*)\'\] %\>(.*)$')
-    yaml.add_implicit_resolver("!pathex", pattern_env)
+    yaml.add_implicit_resolver("!pathex", pattern_env, None, SafeLoader)
 
     # Add command resolver
     pattern_cmd = re.compile(r'^(.*)\<%= CMD\[\'(.*)\'\] %\>(.*)$')
-    yaml.add_implicit_resolver("!pathcmd", pattern_cmd)
+    yaml.add_implicit_resolver("!pathcmd", pattern_cmd, None, SafeLoader)
 
     # Add function resolver
     pattern_fun = re.compile(r'^(.*)\<%= FUNC\[\'(.*)\((.*)\)\'\] %\>(.*)$')
-    yaml.add_implicit_resolver("!func", pattern_fun)
+    yaml.add_implicit_resolver("!func", pattern_fun, None, SafeLoader)
 
     def pathex_constructor(loader, node):
         """Processes environment variables found in the YAML"""
@@ -172,13 +173,13 @@ def parse_config(config_path):
         retval = PREDEFINED_FUNCTIONS[fun](arg)
         return before_path + retval.decode("utf-8") + remaining_path
 
-    yaml.add_constructor("!pathex", pathex_constructor)
-    yaml.add_constructor("!pathcmd", pathcmd_constructor)
-    yaml.add_constructor("!func", fun_constructor)
+    yaml.add_constructor("!pathex", pathex_constructor, SafeLoader)
+    yaml.add_constructor("!pathcmd", pathcmd_constructor, SafeLoader)
+    yaml.add_constructor("!func", fun_constructor, SafeLoader)
 
     with open(temp_path, 'r') as stream:
         try:
-            return yaml.load(stream)
+            return yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             raise ValueError("Invalid config passed to the program: %s" % exc)
 
@@ -187,4 +188,4 @@ def template_yaml(yaml_dict):
     """Runs the YAML through the Jinja2 templater"""
     template_yaml_dict = Template(yaml.safe_dump(yaml_dict, default_flow_style=False))
     template_rendered = template_yaml_dict.render(yaml_dict)
-    return yaml.load(template_rendered)
+    return yaml.safe_load(template_rendered)

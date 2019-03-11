@@ -8,6 +8,8 @@ build/
 *.pyc
 *.egg
 *.egg/
+.eggs/
+virtualenv/
 
 # release-manager
 deploy/
