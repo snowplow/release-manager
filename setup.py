@@ -52,7 +52,7 @@ setup(
     install_requires=[
         "requests[security]==2.21.0",
         "pyyaml==5.1b3",
-        "jinja2==2.10",
+        "jinja2==2.11.3",
         "boto3==1.9.91",
         "botocore==1.12.91"
     ],
