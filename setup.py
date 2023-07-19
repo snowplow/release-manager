@@ -50,11 +50,11 @@ setup(
         "release_manager.test"
     ],
     install_requires=[
-        "requests[security]==2.21.0",
-        "pyyaml==5.1b3",
-        "jinja2==2.10",
-        "boto3==1.9.91",
-        "botocore==1.12.91"
+        "requests[security]==2.31.0",
+        "pyyaml==6.0.1",
+        "jinja2==3.1.2",
+        "boto3==1.28.6",
+        "botocore==1.31.6"
     ],
     tests_require=[
         "nose"
